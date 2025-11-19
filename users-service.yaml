@@ -1,0 +1,23 @@
+# users-service.yaml (versión HTTPS)
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-service
+  namespace: default
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-1:455834725920:certificate/d363dc7c-0cb1-4927-8600-0fed3b3f5185"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+spec:
+  type: LoadBalancer
+  selector:
+    app: users-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000
+    - name: https
+      port: 443
+      targetPort: 8000
+

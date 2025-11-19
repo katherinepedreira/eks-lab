@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: lab-microservicios
+  labels:
+    app: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: katherinepedreira/frontend:v3   # <-- tu imagen en Docker Hub
+          ports:
+            - containerPort: 80                     # puerto que expone tu Dockerfile
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: lab-microservicios
+spec:
+  type: LoadBalancer          # para que AWS cree un ELB para el frontend
+  selector:
+    app: frontend
+  ports:
+    - port: 80                # puerto “público” del service
+      targetPort: 80          # puerto dentro del contenedor
+
